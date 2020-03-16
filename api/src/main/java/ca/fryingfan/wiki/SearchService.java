@@ -39,7 +39,16 @@ public class SearchService {
                 .map(hit -> {
                     final String title = String.valueOf(hit.getSourceAsMap().get("title"));
                     final String url = "https://en.wikipedia.org/wiki/" + URLEncoder.encode(title, StandardCharsets.UTF_8).replace("+", "_");
-                    return new WikiSearchResult(title, url, hit.getScore());
+                    final String body = String.valueOf(hit.getSourceAsMap().get("body"));
+                    final String excerpt = body
+                            .substring(0, Math.min(100, body.length()))
+                            .replace("(", "")
+                            .replace(")", "")
+                            .replace(",", "")
+                            .replace(";", "")
+                            .replace("thumb|right", "")
+                            .replace("|", "");
+                    return new WikiSearchResult(title, url, hit.getScore(), excerpt);
                 })
                 .collect(Collectors.toList());
     }

@@ -4,11 +4,13 @@ public class WikiSearchResult {
     private final String title;
     private final String url;
     private final float score;
+    private final String excerpt;
 
-    public WikiSearchResult(String title, String url, float score) {
+    public WikiSearchResult(String title, String url, float score, String excerpt) {
         this.title = title;
         this.url = url;
         this.score = score;
+        this.excerpt = excerpt;
     }
 
     public String getTitle() {
@@ -21,5 +23,9 @@ public class WikiSearchResult {
 
     public float getScore() {
         return score;
+    }
+
+    public String getExcerpt() {
+        return excerpt;
     }
 }
