@@ -1,0 +1,5 @@
+.idea/
+*.iml
+.env
+/ingest/dumps
+__pycache__/

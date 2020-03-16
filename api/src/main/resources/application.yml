@@ -1,0 +1,6 @@
+spring:
+  elasticsearch:
+    rest:
+      uris: ${ES_HOST}
+      username: ${ES_USER}
+      password: ${ES_PASS}
