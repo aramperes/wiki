@@ -32,6 +32,7 @@ public class SearchService {
                         .field("title", 1.0F)
                         .field("body", 1.0F)
         );
+        builder.size(50);
 
         final SearchRequest request = new SearchRequest("wiki").source(builder);
 

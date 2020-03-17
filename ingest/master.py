@@ -9,5 +9,5 @@ with open("sources.txt") as f:
         if url:
             args.append(url)
 
-with multiprocessing.Pool(8) as pool:
+with multiprocessing.Pool(2) as pool:
     pool.map(work, args)

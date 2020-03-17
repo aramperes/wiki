@@ -10,6 +10,7 @@ mwparserfromhell = "*"
 elasticsearch = ">=7.0.0,<8.0.0"
 lxml = "*"
 certifi = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

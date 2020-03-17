@@ -1,0 +1,23 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Wikipedia Search</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="grid-parent">
+
+  <mat-form-field class="input">
+    <mat-label>Search</mat-label>
+    <input matInput placeholder="Pizza" (input)="onInput($event)">
+  </mat-form-field>
+
+
+  <ag-grid-angular
+    class="ag-theme-balham grid"
+    [suppressHorizontalScroll]="true"
+    [columnDefs]="columnDefs"
+    [rowData]="rowData"
+    (gridReady)="onGridReady($event)"
+    (rowClicked)="onRowClick($event)"
+  >
+  </ag-grid-angular>
+</div>

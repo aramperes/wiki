@@ -1,10 +1,11 @@
 import bz2
 import os
 import queue
-import time
-from urllib.request import urlretrieve
+import shutil
+from uuid import uuid4
 
 import mwparserfromhell
+import requests
 from elasticsearch import Elasticsearch
 from lxml import etree
 from lxml.etree import Element
@@ -74,9 +75,14 @@ def work(path: str):
     index_queue = queue.Queue(maxsize=100)
 
     if path.startswith("https://"):
-        local = "dumps/piece-" + str(int(time.time() * 1000))
+        local = "dumps/piece-" + str(uuid4())
         print("Downloading", path, "to", local)
-        urlretrieve(path, local)
+        req = requests.get(path, stream=True)
+        if not req.ok:
+            print(req.text)
+            exit(2)
+        with open(local, 'wb') as f:
+            shutil.copyfileobj(req.raw, f)
         print("Download of", local, "complete")
         path = local
 
@@ -86,3 +92,7 @@ def work(path: str):
             page = Page(elem)
             if not page.ignored and page.body and page.title and page.id:
                 index(page, es, index_queue)
+
+    print("Index of", path, "complete")
+    os.remove(path)
+    return "Done"
