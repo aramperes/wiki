@@ -31,6 +31,7 @@ steps:
 - script: |
     cp ./Dockerfile ./dist/search-tool
     docker build ./dist/search-tool -t docker.pkg.github.com/momothereal/wiki/search-tool:latest
+    docker login docker.pkg.github.com --username $(DOCKER_USERNAME) --password-string $(DOCKER_PASSWORD)
     docker push docker.pkg.github.com/momothereal/wiki/search-tool:latest
   displayName: Build Docker image for search-tool
   workingDirectory: search-tool
