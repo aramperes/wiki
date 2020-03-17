@@ -29,7 +29,8 @@ steps:
     releaseType: stable
 
 - script: |
-    docker build dist/search-tool/ -f ./Dockerfile -t docker.pkg.github.com/momothereal/wiki/search-tool:latest
+    cp ./Dockerfile ./dist/search-tool
+    docker build ./dist/search-tool -t docker.pkg.github.com/momothereal/wiki/search-tool:latest
     docker push docker.pkg.github.com/momothereal/wiki/search-tool:latest
   displayName: Build Docker image for search-tool
   workingDirectory: search-tool
