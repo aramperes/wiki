@@ -10,11 +10,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: |
-    wget -O - https://github.com/openshift/source-to-image/releases/download/v1.2.0/source-to-image-v1.2.0-2a579ecd-linux-amd64.tar.gz | tar -xz
-    ls -la
-  displayName: Install Source-to-Image
-
 - task: NodeTool@0
   inputs:
     versionSpec: '12.x'
@@ -32,3 +27,12 @@ steps:
   inputs:
     dockerVersion: 17.09.0-ce
     releaseType: stable
+
+- script: |
+    wget -O - https://github.com/openshift/source-to-image/releases/download/v1.2.0/source-to-image-v1.2.0-2a579ecd-linux-amd64.tar.gz | tar -xz
+  displayName: Install Source-to-Image
+
+- script: |
+    ./s2i build ./search-tool schuermann/s2i-angular-container docker.pkg.github.com/momothereal/wiki/search-tool:latest
+    docker push docker.pkg.github.com/momothereal/wiki/search-tool:latest
+  displayName: Build search-tool
