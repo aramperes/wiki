@@ -11,9 +11,9 @@ pool:
 
 steps:
 - script: |
-    mkdir -p /usr/bin/s2i
-    wget -O - https://github.com/openshift/source-to-image/releases/download/v1.2.0/source-to-image-v1.2.0-2a579ecd-linux-amd64.tar.gz | tar -xzC /usr/bin/s2i
-    ls /usr/bin/s2i
+    mkdir s2i
+    wget -O - https://github.com/openshift/source-to-image/releases/download/v1.2.0/source-to-image-v1.2.0-2a579ecd-linux-amd64.tar.gz | tar -xzC s2i
+    ls -la s2i
   displayName: Install Source-to-Image
 
 - task: NodeTool@0
