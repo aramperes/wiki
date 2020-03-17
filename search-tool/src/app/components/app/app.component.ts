@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {SearchService} from "../../services/search.service";
-import {ColDef} from "ag-grid-community";
+import {ColDef, GridApi} from "ag-grid-community";
 import {SearchResult} from "../../models/search-result.model";
 import {of} from "rxjs";
-import {switchMap} from "rxjs/operators";
+import {delay, filter, flatMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -20,8 +20,9 @@ export class AppComponent implements OnInit {
 
   rowData: SearchResult[];
   term: string;
+  loading: boolean;
 
-  private api: any;
+  private api: GridApi;
 
   constructor(private searchService: SearchService) {
   }
@@ -40,16 +41,21 @@ export class AppComponent implements OnInit {
     const query = target.value.trim();
     if (query.length === 0) {
       this.rowData = [];
+      this.loading = false;
     } else {
       this.rowData = null;
     }
     this.term = query;
     if (query.length > 0) {
+      this.loading = true;
       of(query).pipe(
-        switchMap(query => this.searchService.search(query))
+        delay(100),
+        filter(q => this.term === q),
+        flatMap(query => this.searchService.search(query))
       ).subscribe(results => {
         if (query === this.term) {
           this.rowData = results;
+          this.loading = false;
           this.api.sizeColumnsToFit();
         }
       });

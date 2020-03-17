@@ -4,12 +4,11 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="grid-parent">
-
   <mat-form-field class="input">
     <mat-label>Search</mat-label>
     <input matInput placeholder="Pizza" (input)="onInput($event)">
+    <mat-spinner *ngIf="loading" [diameter]="20" matSuffix></mat-spinner>
   </mat-form-field>
-
 
   <ag-grid-angular
     class="ag-theme-balham grid"
