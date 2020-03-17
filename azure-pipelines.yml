@@ -10,6 +10,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- script: |
+    wget -O - https://github.com/openshift/source-to-image/releases/download/v1.2.0/source-to-image-v1.2.0-2a579ecd-linux-amd64.tar.gz | tar -C /usr/bin/s2i
+    ls /usr/bin/s2i
+  displayName: Install Source-to-Image
+
 - task: NodeTool@0
   inputs:
     versionSpec: '12.x'
@@ -21,3 +26,9 @@ steps:
     yarn build --prod
   displayName: 'yarn install and build'
   workingDirectory: search-tool
+
+- task: DockerInstaller@0
+  displayName: Docker Installer
+  inputs:
+    dockerVersion: 17.09.0-ce
+    releaseType: stable
