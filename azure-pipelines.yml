@@ -33,6 +33,6 @@ steps:
   displayName: Install Source-to-Image
 
 - script: |
-    ./s2i build ./search-tool schuermann/s2i-angular-container docker.pkg.github.com/momothereal/wiki/search-tool:latest
+    ./s2i build . --context-dir search-tool/dist/search-tool ibotty/s2i-nginx docker.pkg.github.com/momothereal/wiki/search-tool:latest
     docker push docker.pkg.github.com/momothereal/wiki/search-tool:latest
   displayName: Build search-tool
