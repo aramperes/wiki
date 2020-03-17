@@ -29,11 +29,7 @@ steps:
     releaseType: stable
 
 - script: |
-    wget -O - https://github.com/openshift/source-to-image/releases/download/v1.2.0/source-to-image-v1.2.0-2a579ecd-linux-amd64.tar.gz | tar -xz
-  displayName: Install Source-to-Image
-
-- script: |
-    find search-tool/
-    ./s2i build . --context-dir search-tool/dist/search-tool ibotty/s2i-nginx docker.pkg.github.com/momothereal/wiki/search-tool:latest
+    docker build dist/search-tool/ -f ./Dockerfile -t docker.pkg.github.com/momothereal/wiki/search-tool:latest
     docker push docker.pkg.github.com/momothereal/wiki/search-tool:latest
-  displayName: Build search-tool
+  displayName: Build Docker image for search-tool
+  workingDirectory: search-tool
