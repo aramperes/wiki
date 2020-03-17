@@ -16,8 +16,8 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install -g @angular/cli
-    npm install
-    ng build --prod
-  displayName: 'npm install and build'
-  workingDirectory: search-tool/
+    yarn global add @angular/cli typescript
+    yarn
+    yarn build --prod
+  displayName: 'yarn install and build'
+  workingDirectory: search-tool
