@@ -1,6 +1,7 @@
 package ca.fryingfan.wiki;
 
 import ca.fryingfan.wiki.model.WikiSearchResult;
+import ca.fryingfan.wiki.model.WikiSearchStats;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,5 +28,13 @@ public class SearchController {
     )
     public ResponseEntity<List<WikiSearchResult>> search(@RequestParam(name = "term") String term) throws IOException {
         return ResponseEntity.ok(searchService.search(term));
+    }
+
+    @GetMapping(
+            path = "/stats",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<WikiSearchStats> getStats() throws IOException {
+        return ResponseEntity.ok(searchService.getStats());
     }
 }

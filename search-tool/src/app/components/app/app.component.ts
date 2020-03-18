@@ -4,6 +4,7 @@ import {ColDef, GridApi} from "ag-grid-community";
 import {SearchResult} from "../../models/search-result.model";
 import {of} from "rxjs";
 import {delay, filter, flatMap} from "rxjs/operators";
+import {IndexStats} from "../../models/index-stats.model";
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
   rowData: SearchResult[];
   term: string;
   loading: boolean;
+  stats: IndexStats = null;
 
   private api: GridApi;
 
@@ -28,6 +30,16 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.searchService.stats()
+      .subscribe(stats => this.stats = stats);
+  }
+
+  get inputLabel() {
+    if (this.stats) {
+      return "Search " + this.stats.size.toLocaleString() + " articles";
+    } else {
+      return "Search";
+    }
   }
 
   onGridReady($event: any) {
