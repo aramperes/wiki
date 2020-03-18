@@ -2,6 +2,8 @@
 
 This is a small side-project to index the entirety of Wikipedia in ElasticSearch, and to search it in a web page.
 
+Temporarily hosted on: https://wikipedia.momoperes.ca (using a free-trial of Elastic Cloud, so it will stop working by April 2020).
+
 ## Structure
 
 * **api**: A Spring Boot REST service to query ElasticSearch
