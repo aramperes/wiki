@@ -2,6 +2,9 @@ import bz2
 import os
 import queue
 import shutil
+import sys
+import time
+import traceback
 from uuid import uuid4
 
 import mwparserfromhell
@@ -66,33 +69,53 @@ def create_index(client: Elasticsearch):
 
 
 def work(path: str):
+    es_host = os.getenv("ES_HOST")
+    es_user = os.getenv("ES_USER")
+    es_pass = os.getenv("ES_PASS")
+
+    if not es_host:
+        print("No ES_HOST specified")
+        exit(1)
+
     es = Elasticsearch(
-        hosts=[os.getenv("ES_HOST")],
-        http_auth=(os.getenv("ES_USER"), os.getenv("ES_PASS"))
+        hosts=[es_host],
+        http_auth=((es_user, es_pass) if es_user else None)
     )
 
-    create_index(es)
-    index_queue = queue.Queue(maxsize=100)
+    try:
 
-    if path.startswith("https://"):
-        local = "dumps/piece-" + str(uuid4())
-        print("Downloading", path, "to", local)
-        req = requests.get(path, stream=True)
-        if not req.ok:
-            print(req.text)
-            exit(2)
-        with open(local, 'wb') as f:
-            shutil.copyfileobj(req.raw, f)
-        print("Download of", local, "complete")
-        path = local
+        create_index(es)
+        index_queue = queue.Queue(maxsize=100)
 
-    with bz2.open(path, "r") as f:
-        parser = etree.iterparse(f, tag="{http://www.mediawiki.org/xml/export-0.10/}page")
-        for event, elem in parser:
-            page = Page(elem)
-            if not page.ignored and page.body and page.title and page.id:
-                index(page, es, index_queue)
+        if path.startswith("https://"):
+            local = "dumps/piece-" + str(uuid4())
+            print("Downloading", path, "to", local)
+            req = requests.get(path, stream=True)
+            req.raise_for_status()
+            with open(local, 'wb') as f:
+                shutil.copyfileobj(req.raw, f)
+            print("Download of", local, "complete")
+            path = local
+
+        with bz2.open(path, "r") as f:
+            parser = etree.iterparse(f, tag="{http://www.mediawiki.org/xml/export-0.10/}page")
+            for event, elem in parser:
+                page = Page(elem)
+                if not page.ignored and page.body and page.title and page.id:
+                    index(page, es, index_queue)
+
+        # Index the rest of the queue
+        if not index_queue.empty():
+            bulk(index_queue, es)
+
+    except Exception as e:
+        print("Error while processing path", path, ":", str(e))
+        traceback.print_exc(file=sys.stdout)
+
+        # Wait and retry
+        time.sleep(10)
+        work(path)
 
     print("Index of", path, "complete")
     os.remove(path)
-    return "Done"
+    return "done"

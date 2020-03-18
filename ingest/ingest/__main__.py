@@ -6,7 +6,7 @@ def run():
     import sys
 
     if len(sys.argv) == 1:
-        print("Usage:", sys.argv[0], " <path to xml.bz2>")
+        print("Usage:", sys.argv[0], " <Path or URL to xml.bz2>")
         exit(1)
 
     work(sys.argv[1])
